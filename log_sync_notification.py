@@ -24,7 +24,7 @@ logging.basicConfig(level=logging.DEBUG,
                     datefmt='%y-%m-%d %H:%M:%S')
 # Time
 localtime = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time()))
-localtime2 = time.strftime('%Y%m%d_%H%M%S', time.localtime(time.time()))
+localtime2 = time.strftime('%Y%m%d_%H%M', time.localtime(time.time()))
 # Local path
 current_exec_path = os.getcwd()
 
