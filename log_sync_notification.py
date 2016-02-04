@@ -1,17 +1,18 @@
 #!/usr/bin/python
 # coding=UTF-8
 
-import os
-import time
+import json
 import logging
+import os
 import pyodbc
+import time
 from openpyxl import Workbook
 from openpyxl.chart import (
     LineChart,
     Reference,
 )
+
 import mail
-import json
 
 with open('cfg.json') as data_file:
     cfg = json.load(data_file)
@@ -37,10 +38,10 @@ def log_detail_list_count():
         cursor_logcount = connstr_logcount.cursor()
 
         sqlstr_logcount="SELECT Time,\
-	    MAX(case when tag='HTC_LOG_UPLOAD' then Count else 0 end) as 'HTC_LOG_UPLOAD',\
-	    MAX(case when tag='HTC_MODEM_RESET' then Count else 0 end) as 'HTC_MODEM_RESET',\
-	    MAX(case when tag='HTC_PWR_EXPERT' then Count else 0 end) as 'HTC_PWR_EXPERT',\
-	    MAX(case when tag='LASTKMSG' then Count else 0 end) as 'LASTKMSG'\
+        MAX(case when tag='HTC_LOG_UPLOAD' then Count else 0 end) as 'HTC_LOG_UPLOAD',\
+        MAX(case when tag='HTC_MODEM_RESET' then Count else 0 end) as 'HTC_MODEM_RESET',\
+        MAX(case when tag='HTC_PWR_EXPERT' then Count else 0 end) as 'HTC_PWR_EXPERT',\
+        MAX(case when tag='LASTKMSG' then Count else 0 end) as 'LASTKMSG'\
         FROM (\
         SELECT CONVERT(char(13),[CreatedTime],120)+':00:00' AS 'Time',tag,COUNT(tag) AS 'Count'\
         FROM [KernelInfo].[dbo].[AndLogDetail]\
@@ -68,7 +69,7 @@ try:
     # Get 6 hours data by tag
     # if count < 0 send mail and provide data
     logging.info("+++ Check status")
-    ErrorFound = True
+    ErrorFound = False
     for tag in TagList:
         sqlStr = "SELECT COUNT(tag) AS 'Count'\
                  FROM [KernelInfo].[dbo].[AndLogDetail]\
@@ -77,13 +78,17 @@ try:
 
         cursor.execute(sqlStr)
         rows = cursor.fetchall()
-        for row in rows:
-            if row.Count > 0:
-                logging.debug(tag+" count is "+str(row.Count))
-            else:
-                ErrorFound = True
-                logging.debug('fail!!!')
-                logging.debug(tag+" count is "+str(row.Count))
+        if not rows:
+            ErrorFound = True
+        else:
+            for row in rows:
+                logging.debug(row.Count)
+                if row.Count > 0:
+                    logging.debug(tag+" count is "+str(row.Count))
+                else:
+                    ErrorFound = True
+                    logging.debug('fail!!!')
+                    logging.debug(tag+" count is "+str(row.Count))
 
     if ErrorFound:
         logging.warning("Fail!!")

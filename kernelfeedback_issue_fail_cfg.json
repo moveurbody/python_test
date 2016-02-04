@@ -1,0 +1,7 @@
+{
+  "ConnectionStr":"DRIVER={SQL Server};SERVER=SCDGTM3.HTC.COM;DATABASE=KernelInfo;UID=Kernel_PESreader;PWD=PESreader_Kernel",
+  "mail_sender":"yuhsuan_chen@htc.com",
+  "mail_receiver":"yuhsuan_chen@htc.com;justin_chang@htc.com;TingKai_Wu@htc.com",
+  "mail_subject":"Notice:[KernelFeedback] Create / Reply Fail Found",
+  "mail_body":"<p><u><strong>Hi all,</strong></u></p><p>Kernel feedback created / replyed issue fail was found.</p><p>Please check the attachment for more detail.</p><p>Thank you.</p>"
+}
