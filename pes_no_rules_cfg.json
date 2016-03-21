@@ -1,0 +1,7 @@
+{
+  "ConnectionStr":"DRIVER={SQL Server};SERVER=SCDGTM3.HTC.COM;DATABASE=PowerExpertSystem;UID=PES_admin;PWD=admin_PES",
+  "mail_sender":"PowerExpertSystemNotification@htc.com",
+  "mail_receiver":["yuhsuan_chen@htc.com"],
+  "mail_subject":"Notice:[PES] PES User Trial No Rule Found Cases",
+  "mail_body":"<p><strong><ins>Hi All,</ins></strong></p><p>Please help to check PES User Trial non-defined rule cases.</p><p>Thank you.</p>"
+}

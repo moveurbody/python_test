@@ -14,7 +14,7 @@ from openpyxl.chart import (
 
 import mail
 
-with open('cfg.json') as data_file:
+with open('log_sync_notification_cfg.json') as data_file:
     cfg = json.load(data_file)
 print cfg["ConnectionStr"]
 
@@ -124,6 +124,9 @@ try:
         wb.save(excel_logpath)
         fullpath=current_exec_path+"\\"+excel_logpath
         mail.send_mail(cfg['mail_sender'], cfg['mail_receiver'], cfg['mail_subject'], cfg['mail_body'], fullpath)
+
+        # Delete File
+        os.remove(fullpath)
     else:
         logging.info("Normal!")
     logging.info("--- Check status")

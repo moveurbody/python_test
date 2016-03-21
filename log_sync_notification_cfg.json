@@ -1,0 +1,8 @@
+{
+  "ConnectionStr":"DRIVER={SQL Server};SERVER=SCDGTM3.HTC.COM;DATABASE=KernelInfo;UID=Kernel_PESreader;PWD=PESreader_Kernel",
+  "CheckHour":3,
+  "mail_sender":"yuhsuan_chen@htc.com",
+  "mail_receiver":["yuhsuan_chen@htc.com","justin_chang@htc.com","tingkai_wu@htc.com"],
+  "mail_subject":"Notice:[LogSync] Log abnormal",
+  "mail_body":"<p><u><strong>Hi all,</strong></u></p><p>Some log didn&#39;t sync over 3 hours.</p><p>Please check the attachment for more detail.</p><p>MASD server contact window:&nbsp;jyhshiang_wang@htc.com</p>"
+}

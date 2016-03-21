@@ -85,7 +85,24 @@ try:
         logging.debug("--- Inital Excel")
 
         # Send mail
+        logging.debug(cfg['mail_receiver'])
         mail.send_mail(cfg['mail_sender'], cfg['mail_receiver'], cfg['mail_subject'], cfg['mail_body'], fullpath)
+
+        # Update the time for next run
+        sqlStr_update_time = "UPDATE AndFirstException \
+                              SET LogReceivedTime= CONVERT(nvarchar(11),GETDATE(),120)+'11:11:11' \
+                              WHERE ErrorPatternID>0 \
+                              AND LogDetailID IN \
+                             (SELECT LogDetailID FROM AndFirstExceptionUtd WHERE  ItsType IS NULL AND Comments IS NULL)"
+        logging.debug(sqlStr_update_time)
+        logging.debug("Update time for fail cases")
+        connStr = pyodbc.connect(str(cfg["ConnectionStr"]))
+        cursor = connStr.cursor()
+        cursor.execute(sqlStr_update_time)
+        connStr.commit()
+
+        # Delete File
+        os.remove(fullpath)
     else:
         ErrorFound = False
         logging.debug("No Error Found")
