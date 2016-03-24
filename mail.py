@@ -4,6 +4,7 @@
 import os
 import logging
 from email.mime.text import MIMEText
+from email.mime.image import MIMEImage
 from email.mime.multipart import MIMEMultipart
 import smtplib
 
@@ -14,16 +15,24 @@ logging.basicConfig(level=logging.DEBUG,
                     datefmt='%y-%m-%d %H:%M:%S')
 
 
-def send_mail(mail_from, mail_to, mail_subject, mail_body, mail_attachment=None):
+def send_mail(mail_from, mail_to, mail_subject, mail_body, mail_attachment=None, mail_picture=None):
     msg = MIMEMultipart()
     # Mail information
     msg['from'] = mail_from
     # Combine the multiple recipients to a string for MIMEText
     msg['to'] = ";".join(mail_to)
     msg['subject'] = mail_subject
+
     # Mail body
     text = MIMEText(mail_body, 'html')
     msg.attach(text)
+
+    # Add picture
+    fp = open(mail_picture, "rb")
+    img = MIMEImage(fp.read())
+    img.add_header("Content-ID", "img")
+    # img.add_header("Content-Disposition", "inline", filename="python-logo.gif")
+    msg.attach(img)
 
     # Attachment
     if mail_attachment is None:

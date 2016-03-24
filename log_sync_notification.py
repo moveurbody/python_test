@@ -1,6 +1,10 @@
 #!/usr/bin/python
 # coding=UTF-8
 
+# ================2016-03-24==================
+# Get chart from excel and insert to mail body
+# ============================================
+
 import json
 import logging
 import os
@@ -11,8 +15,8 @@ from openpyxl.chart import (
     LineChart,
     Reference,
 )
-
 import mail
+from win32com.client import Dispatch
 
 with open('log_sync_notification_cfg.json') as data_file:
     cfg = json.load(data_file)
@@ -119,14 +123,35 @@ try:
             c1.style = 2
             data = Reference(ws, min_col=2, min_row=1, max_col=5, max_row=8)
             c1.add_data(data, titles_from_data=True)
-            ws.add_chart(c1, "A10")
+        ws.add_chart(c1, "A10")
         excel_logpath = 'Detail_'+localtime2+'.xlsx'
         wb.save(excel_logpath)
-        fullpath=current_exec_path+"\\"+excel_logpath
-        mail.send_mail(cfg['mail_sender'], cfg['mail_receiver'], cfg['mail_subject'], cfg['mail_body'], fullpath)
+        fullpath = current_exec_path+"\\"+excel_logpath
+
+        # export excel picture
+        picture_path = ''
+        try:
+            xlsApp = Dispatch("Excel.Application")
+            xlsWB = xlsApp.Workbooks.Open(fullpath)
+            xlsSheet = xlsWB.Sheets("Data")
+            i = 0
+            for chart in xlsSheet.ChartObjects():
+                chart.Chart.Export(current_exec_path + str(i) + ".png")
+                picture_path = current_exec_path + str(i) + ".png"
+                logging.debug(picture_path)
+                i += 1
+        except Exception, e:
+            print "ex"
+            print e
+            logging.error(e)
+        finally:
+            xlsWB.Close()
+
+        mail.send_mail(cfg['mail_sender'], cfg['mail_receiver'], cfg['mail_subject'], cfg['mail_body'], fullpath, picture_path)
 
         # Delete File
         os.remove(fullpath)
+        os.remove(picture_path)
     else:
         logging.info("Normal!")
     logging.info("--- Check status")
