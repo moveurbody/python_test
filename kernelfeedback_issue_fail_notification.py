@@ -93,7 +93,8 @@ try:
                               SET LogReceivedTime= CONVERT(nvarchar(11),GETDATE(),120)+'11:11:11' \
                               WHERE ErrorPatternID>0 \
                               AND LogDetailID IN \
-                             (SELECT LogDetailID FROM AndFirstExceptionUtd WHERE  ItsType IS NULL AND Comments IS NULL)"
+                             (SELECT LogDetailID FROM AndFirstExceptionUtd WHERE  ItsType IS NULL AND Comments IS NULL)\
+                             and LogDetailID NOT IN (select LogDetailID from AndItsIssue)"
         logging.debug(sqlStr_update_time)
         logging.debug("Update time for fail cases")
         connStr = pyodbc.connect(str(cfg["ConnectionStr"]))
